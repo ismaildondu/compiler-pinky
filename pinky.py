@@ -1,0 +1,18 @@
+import sys
+from lexer import Lexer
+from tokens import Token
+
+if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        raise SystemExit("Usage: python pinky.py <filename>")
+        sys.exit(1)
+    filename = sys.argv[1]
+    print(filename)
+    with open(filename, 'r') as file:
+        content = file.read()
+        print("LEXER: ")
+        tokens = Lexer(content).tokenize()
+        for token in tokens:
+            print(token)
+        
+
