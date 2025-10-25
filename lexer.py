@@ -87,9 +87,6 @@ class Lexer:
                     self.add_token(TOK_ASSIGN)
                 else:
                     self.add_token(TOK_COLON)
-            
-
-            
         return self.tokens
     def advance(self):
         char = self.source[self.current]
