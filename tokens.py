@@ -59,6 +59,7 @@ TOK_PRINT    = 'TOK_PRINT'
 TOK_PRINTLN  = 'TOK_PRINTLN'
 TOK_RET      = 'TOK_RET'
 
+
 class Token:
     def __init__(self, token_type, lexeme, line):
         self.token_type = token_type
