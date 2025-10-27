@@ -11,6 +11,8 @@ class Lexer:
             text = self.source[self.start:self.current]
         self.tokens.append(Token(token_type, text, self.line))
     def peak(self):
+        if self.current >= len(self.source):
+            return '\0'
         return self.source[self.current]
     def lookahead(self,n=1):
         if self.current + n >= len(self.source):
@@ -88,17 +90,35 @@ class Lexer:
                 else:
                     self.add_token(TOK_COLON)
             elif ch.isdigit():
-                while self.peak().isdigit():
-                    self.advance()
-                if self.peak() == '.' and self.lookahead().isdigit():
-                    self.advance()
-                    while self.peak().isdigit():
-                        self.advance()
-                    self.add_token(TOK_FLOAT)
-                else:
-                    self.add_token(TOK_INTEGER)
+                self.handle_number()
+            elif ch == '"':
+                self.handle_string()
+            elif ch == "'":
+                self.handle_string(stringStarter="'")
         return self.tokens
     def advance(self):
         char = self.source[self.current]
         self.current += 1
         return char
+    def handle_number(self):
+        while self.peak().isdigit()
+            self.advance()
+        if self.peak() == '.' and self.lookahead().isdigit():
+            self.advance()
+            while self.peak().isdigit():
+                self.advance()
+            self.add_token(TOK_FLOAT)
+        else:
+            self.add_token(TOK_INTEGER)
+    def handle_string(self, stringStarter='"', multiLine=True):
+        # TODO: If multiLine is false, we should raise an error 
+        # If we are not able to see the ending stringStarter before a new \n.
+        while self.peak() != stringStarter and self.current < len(self.source):
+            if self.peak() == '\n':
+                self.line += 1
+            self.advance()
+        self.advance() 
+        self.add_token(TOK_STRING)
+
+    
+
