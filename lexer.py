@@ -87,6 +87,16 @@ class Lexer:
                     self.add_token(TOK_ASSIGN)
                 else:
                     self.add_token(TOK_COLON)
+            elif ch.isdigit():
+                while self.peak().isdigit():
+                    self.advance()
+                if self.peak() == '.' and self.lookahead().isdigit():
+                    self.advance()
+                    while self.peak().isdigit():
+                        self.advance()
+                    self.add_token(TOK_FLOAT)
+                else:
+                    self.add_token(TOK_INTEGER)
         return self.tokens
     def advance(self):
         char = self.source[self.current]
