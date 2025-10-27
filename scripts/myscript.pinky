@@ -1,20 +1,13 @@
 # evaluate the simple expression+-
 
-:=
->=
->
+gravity = 9.81
+velocity_y = 1.0
 
-==
-=
+if (velocity_y * 5.0 * -1 * gravity <= 0) then
+  println("After 5 sec its velocity zero or lower than 0")
+else 
+  println("After 5 sec its velocity higher than 0")
+end
 
-<
-<=
-
-!
-!=340.2
-
-35.00
-24
-2490.33
-
+"This is a string that does not end
 

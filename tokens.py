@@ -29,6 +29,7 @@ TOK_LT        = 'TOK_LT'
 TOK_GE        = 'TOK_GE'
 TOK_LE        = 'TOK_LE'
 # diffrent from pinky in our language we use != for not equal
+# diffrent from pinky in our language we use = for assign instead of :=
 TOK_NE        = 'TOK_NE'
 TOK_EQ        = 'TOK_EQ'
 TOK_ASSIGN    = 'TOK_ASSIGN'

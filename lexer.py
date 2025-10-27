@@ -95,13 +95,15 @@ class Lexer:
                 self.handle_string()
             elif ch == "'":
                 self.handle_string(stringStarter="'")
+            elif ch == "_" or ch.isalpha():
+                self.handle_identifier()
         return self.tokens
     def advance(self):
         char = self.source[self.current]
         self.current += 1
         return char
     def handle_number(self):
-        while self.peak().isdigit()
+        while self.peak().isdigit():
             self.advance()
         if self.peak() == '.' and self.lookahead().isdigit():
             self.advance()
@@ -117,8 +119,17 @@ class Lexer:
             if self.peak() == '\n':
                 self.line += 1
             self.advance()
+        # If we reached the end of the source without
+        # finding a other stringStarter, it's an unterminated string.
+        if self.current >= len(self.source):
+            raise Exception(f"unterminated string line: {self.line}")
+            return
         self.advance() 
         self.add_token(TOK_STRING)
+    def handle_identifier(self):
+        while self.peak() == "_" or self.peak().isalnum():
+            self.advance()
+        self.add_token(TOK_IDENTIFIER)
 
     
 
