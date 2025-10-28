@@ -129,6 +129,10 @@ class Lexer:
     def handle_identifier(self):
         while self.peak() == "_" or self.peak().isalnum():
             self.advance()
+        text = self.source[self.start:self.current]
+        if text in keywords:
+            self.add_token(keywords[text])
+            return
         self.add_token(TOK_IDENTIFIER)
 
     

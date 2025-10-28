@@ -9,5 +9,5 @@ else
   println("After 5 sec its velocity higher than 0")
 end
 
-"This is a string that does not end
+"This is a string that does not end"
 
