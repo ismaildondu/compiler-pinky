@@ -11,6 +11,8 @@ class Lexer:
             text = self.source[self.start:self.current]
         self.tokens.append(Token(token_type, text, self.line))
     def peak(self):
+        if self.current >= len(self.source):
+            return '\0'
         return self.source[self.current]
     def lookahead(self,n=1):
         if self.current + n >= len(self.source):
@@ -43,9 +45,12 @@ class Lexer:
             elif ch == ' ': pass
             elif ch == '\r': pass
             elif ch == '\t': pass
-            elif ch == '#':
-                while self.peak() != '\n' and self.current < len(self.source):
-                    self.advance()
+            elif ch == '-':
+                if self.match('-'):
+                    while self.peak() != '\n' and self.current < len(self.source):
+                        self.advance()
+                else:
+                    self.add_token(TOK_MINUS)
             elif ch == '(':self.add_token(TOK_LPAREN)
             elif ch == ')':self.add_token(TOK_RPAREN)
             elif ch == '{':self.add_token(TOK_LCURLY)
@@ -55,7 +60,6 @@ class Lexer:
             elif ch == ',':self.add_token(TOK_COMMA)
             elif ch == '.':self.add_token(TOK_DOT)
             elif ch == '+':self.add_token(TOK_PLUS)
-            elif ch == '-':self.add_token(TOK_MINUS)
             elif ch == '*':self.add_token(TOK_STAR)
             elif ch == '^':self.add_token(TOK_CARET)
             elif ch == '/':self.add_token(TOK_SLASH)
@@ -88,17 +92,50 @@ class Lexer:
                 else:
                     self.add_token(TOK_COLON)
             elif ch.isdigit():
-                while self.peak().isdigit():
-                    self.advance()
-                if self.peak() == '.' and self.lookahead().isdigit():
-                    self.advance()
-                    while self.peak().isdigit():
-                        self.advance()
-                    self.add_token(TOK_FLOAT)
-                else:
-                    self.add_token(TOK_INTEGER)
+                self.handle_number()
+            elif ch == '"':
+                self.handle_string()
+            elif ch == "'":
+                self.handle_string(stringStarter="'")
+            elif ch == "_" or ch.isalpha():
+                self.handle_identifier()
         return self.tokens
     def advance(self):
         char = self.source[self.current]
         self.current += 1
         return char
+    def handle_number(self):
+        while self.peak().isdigit():
+            self.advance()
+        if self.peak() == '.' and self.lookahead().isdigit():
+            self.advance()
+            while self.peak().isdigit():
+                self.advance()
+            self.add_token(TOK_FLOAT)
+        else:
+            self.add_token(TOK_INTEGER)
+    def handle_string(self, stringStarter='"', multiLine=True):
+        # TODO: If multiLine is false, we should raise an error 
+        # If we are not able to see the ending stringStarter before a new \n.
+        while self.peak() != stringStarter and self.current < len(self.source):
+            if self.peak() == '\n':
+                self.line += 1
+            self.advance()
+        # If we reached the end of the source without
+        # finding a other stringStarter, it's an unterminated string.
+        if self.current >= len(self.source):
+            raise Exception(f"unterminated string line: {self.line}")
+            return
+        self.advance() 
+        self.add_token(TOK_STRING)
+    def handle_identifier(self):
+        while self.peak() == "_" or self.peak().isalnum():
+            self.advance()
+        text = self.source[self.start:self.current]
+        if text in keywords:
+            self.add_token(keywords[text])
+            return
+        self.add_token(TOK_IDENTIFIER)
+
+    
+

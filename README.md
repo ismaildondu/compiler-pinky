@@ -16,6 +16,9 @@ programming language design so that I can have a different perspective on how so
 ##### 1: Using `!` Instead of `~` 
 When designing the syntax for this project, I chose to use `!` for logical negation instead of `~` because it is conventionally more intuitive. 
 
+##### 2: Using `=` Instead of `:=` 
+(assign) for the same reason of [1(`!` Instead of `~`)]
+
 
 ---
 
