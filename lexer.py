@@ -45,9 +45,10 @@ class Lexer:
             elif ch == ' ': pass
             elif ch == '\r': pass
             elif ch == '\t': pass
-            elif ch == '#':
-                while self.peak() != '\n' and self.current < len(self.source):
-                    self.advance()
+            elif ch == '-':
+                if self.match('-'):
+                    while self.peak() != '\n' and self.current < len(self.source):
+                        self.advance()
             elif ch == '(':self.add_token(TOK_LPAREN)
             elif ch == ')':self.add_token(TOK_RPAREN)
             elif ch == '{':self.add_token(TOK_LCURLY)

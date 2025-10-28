@@ -1,5 +1,4 @@
-# evaluate the simple expression+-
-
+-- evaluate the simple expression+-
 gravity = 9.81
 velocity_y = 1.0
 
