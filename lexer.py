@@ -49,6 +49,8 @@ class Lexer:
                 if self.match('-'):
                     while self.peak() != '\n' and self.current < len(self.source):
                         self.advance()
+                else:
+                    self.add_token(TOK_MINUS)
             elif ch == '(':self.add_token(TOK_LPAREN)
             elif ch == ')':self.add_token(TOK_RPAREN)
             elif ch == '{':self.add_token(TOK_LCURLY)
@@ -58,7 +60,6 @@ class Lexer:
             elif ch == ',':self.add_token(TOK_COMMA)
             elif ch == '.':self.add_token(TOK_DOT)
             elif ch == '+':self.add_token(TOK_PLUS)
-            elif ch == '-':self.add_token(TOK_MINUS)
             elif ch == '*':self.add_token(TOK_STAR)
             elif ch == '^':self.add_token(TOK_CARET)
             elif ch == '/':self.add_token(TOK_SLASH)
