@@ -46,6 +46,8 @@ class Lexer:
             elif ch == '\r': pass
             elif ch == '\t': pass
             elif ch == '-':
+                # TODO: ismail generate comment handle
+                # and multi-line comment handle /* ... */
                 if self.match('-'):
                     while self.peak() != '\n' and self.current < len(self.source):
                         self.advance()
