@@ -1,25 +1,75 @@
 from model import *
-from token import *
+from tokens import *
 
 class Parser:
     def __init__(self, tokens):
         self.tokens = tokens
         self.curr = 0
+
+    def advance(self):
+        token = self.tokens[self.curr]
+        self.curr += 1
+        return token 
+
+    def peek(self):
+        if self.curr >= len(self.tokens):
+            return Token('EOF', '', -1)
+        return self.tokens[self.curr]
+
+    def is_next(self, type):
+        if self.curr >= len(self.tokens):
+            return False
+        return self.peek().token_type == type
+
+    def expect(self, type):
+        if not self.match(type):
+            raise SyntaxError(f"Expected token of type {type} but {self.tokens[self.curr].token_type}")
+
+    def match(self, type):
+        if self.peek().token_type == type:
+            self.advance()
+            return True
+        return False
+
+    def previous(self):
+        return self.tokens[self.curr - 1]
     
     def primary(self):
-        pass
+        if self.match(TOK_INTEGER):
+            return IntegerModel(int(self.previous().lexeme))
+        if self.match(TOK_FLOAT):
+            return FloatModel(float(self.previous().lexeme))
+        if self.match(TOK_LPAREN):
+            expr = self.expression()
+            self.expect(TOK_RPAREN)
+            return GroupingModel(expr)
+        raise SyntaxError(f"Unexpected token: {self.peek()}")
 
     def unary(self):
-        pass
+        if self.match(TOK_MINUS) or self.match(TOK_PLUS) or self.match(TOK_NOT):
+            operator = self.previous()
+            operand = self.unary()
+            return UnaryOperationModel(operator, operand)
+        return self.primary()
 
     def factor(self):
-        pass
+        return self.unary()
     
     def term(self):
-        pass
+        term = self.factor()
+        while self.match(TOK_STAR) or self.match(TOK_SLASH):
+            operator = self.previous()
+            right = self.factor()
+            term = BinaryOperationModel(operator, term, right)
+        return term
 
     def expression(self):
-        pass
+        expr = self.term()
+        while self.match(TOK_PLUS) or self.match(TOK_MINUS):
+            operator = self.previous()
+            right = self.term()
+            expr = BinaryOperationModel(operator, expr, right)
+        return expr
 
     def parse(self):
         ast = self.expression()
