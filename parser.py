@@ -24,6 +24,7 @@ class Parser:
     def expect(self, type):
         if not self.match(type):
             raise SyntaxError(f"Expected token of type {type} but {self.tokens[self.curr].token_type}")
+        
 
     def match(self, type):
         if self.peek().token_type == type:
@@ -74,4 +75,5 @@ class Parser:
     def parse(self):
         ast = self.expression()
         return ast
+
 

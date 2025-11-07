@@ -2,6 +2,8 @@ import sys
 from lexer import Lexer
 from tokens import Token
 from parser import Parser
+from model import *
+from utils import *
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
@@ -17,7 +19,5 @@ if __name__ == '__main__':
             print(token)
     print("PARSED AST: ")
     ast = Parser(tokens).parse()
-    print(ast)
-
-        
-
+    pretty_ast(ast)
+    
