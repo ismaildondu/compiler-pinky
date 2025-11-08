@@ -41,6 +41,7 @@ class Parser:
         if self.match(TOK_FLOAT):
             return FloatModel(float(self.previous().lexeme))
         if self.match(TOK_LPAREN):
+            print("Found token: ", self.previous())
             expr = self.expression()
             self.expect(TOK_RPAREN)
             return GroupingModel(expr)
@@ -74,6 +75,8 @@ class Parser:
 
     def parse(self):
         ast = self.expression()
+        if self.curr < len(self.tokens):
+            raise SyntaxError(f"Unexpected token at end: {self.peek()}")
         return ast
 
 
