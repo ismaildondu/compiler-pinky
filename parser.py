@@ -55,25 +55,25 @@ class Parser:
             operand = self.unary()
             return UnaryOperationModel(operator, operand, operator.line)
         return self.primary()
-
-    def factor(self):
-        return self.unary()
     
-    def term(self):
-        term = self.factor()
+    def multiplication(self):
+        expr = self.unary()
         while self.match(TOK_STAR) or self.match(TOK_SLASH):
             operator = self.previous()
-            right = self.factor()
-            term = BinaryOperationModel(operator, term, right, operator.line)
-        return term
-
-    def expression(self):
-        expr = self.term()
-        while self.match(TOK_PLUS) or self.match(TOK_MINUS):
-            operator = self.previous()
-            right = self.term()
+            right = self.unary()
             expr = BinaryOperationModel(operator, expr, right, operator.line)
         return expr
+
+    def addition(self):
+        expr = self.multiplication()
+        while self.match(TOK_PLUS) or self.match(TOK_MINUS):
+            operator = self.previous()
+            right = self.multiplication()
+            expr = BinaryOperationModel(operator, expr, right, operator.line)
+        return expr
+
+    def expression(self):
+        return self.addition()
 
     def parse(self):
         ast = self.expression()
