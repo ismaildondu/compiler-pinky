@@ -1,6 +1,6 @@
 from model import *
 from tokens import *
-
+from utils import *
 class Parser:
     def __init__(self, tokens):
         self.tokens = tokens
@@ -23,7 +23,10 @@ class Parser:
 
     def expect(self, type):
         if not self.match(type):
-            raise SyntaxError(f"Expected token of type {type} but {self.tokens[self.curr].token_type}")
+            if self.curr >= len(self.tokens):
+                parser_error(f"Expected token of type {type} but reached end of input.", self.previous().line)
+            else:
+                parser_error(f"Expected token of type {type} but {self.tokens[self.curr].token_type} found.", self.peek().line)
         
 
     def match(self, type):
@@ -41,11 +44,10 @@ class Parser:
         if self.match(TOK_FLOAT):
             return FloatModel(float(self.previous().lexeme))
         if self.match(TOK_LPAREN):
-            print("Found token: ", self.previous())
             expr = self.expression()
             self.expect(TOK_RPAREN)
             return GroupingModel(expr)
-        raise SyntaxError(f"Unexpected token: {self.peek()}")
+        parser_error(f"Unexpected token: {self.peek().lexeme}", self.peek().line)
 
     def unary(self):
         if self.match(TOK_MINUS) or self.match(TOK_PLUS) or self.match(TOK_NOT):
@@ -76,7 +78,7 @@ class Parser:
     def parse(self):
         ast = self.expression()
         if self.curr < len(self.tokens):
-            raise SyntaxError(f"Unexpected token at end: {self.peek()}")
+            parser_error(f"Unexpected token at end: {self.peek().lexeme}", self.peek().line)
         return ast
 
 
