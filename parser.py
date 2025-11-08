@@ -40,20 +40,20 @@ class Parser:
     
     def primary(self):
         if self.match(TOK_INTEGER):
-            return IntegerModel(int(self.previous().lexeme))
+            return IntegerModel(int(self.previous().lexeme), self.previous().line)
         if self.match(TOK_FLOAT):
-            return FloatModel(float(self.previous().lexeme))
+            return FloatModel(float(self.previous().lexeme), self.previous().line)
         if self.match(TOK_LPAREN):
             expr = self.expression()
             self.expect(TOK_RPAREN)
-            return GroupingModel(expr)
+            return GroupingModel(expr, self.previous().line)
         parser_error(f"Unexpected token: {self.peek().lexeme}", self.peek().line)
 
     def unary(self):
         if self.match(TOK_MINUS) or self.match(TOK_PLUS) or self.match(TOK_NOT):
             operator = self.previous()
             operand = self.unary()
-            return UnaryOperationModel(operator, operand)
+            return UnaryOperationModel(operator, operand, operator.line)
         return self.primary()
 
     def factor(self):
@@ -64,7 +64,7 @@ class Parser:
         while self.match(TOK_STAR) or self.match(TOK_SLASH):
             operator = self.previous()
             right = self.factor()
-            term = BinaryOperationModel(operator, term, right)
+            term = BinaryOperationModel(operator, term, right, operator.line)
         return term
 
     def expression(self):
@@ -72,7 +72,7 @@ class Parser:
         while self.match(TOK_PLUS) or self.match(TOK_MINUS):
             operator = self.previous()
             right = self.term()
-            expr = BinaryOperationModel(operator, expr, right)
+            expr = BinaryOperationModel(operator, expr, right, operator.line)
         return expr
 
     def parse(self):

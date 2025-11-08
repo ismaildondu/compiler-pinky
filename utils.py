@@ -26,6 +26,12 @@ def parser_error(message, line=None):
         print(f"{ERROR_RED}Parser Error [Line {line}]: {message}\033[0m")
     else:
         print(f"{ERROR_RED}Parser Error: {message}\033[0m")
-    print(f"{ERROR_RED}Compilation terminated due to errors.\033[0m")
+    sys.exit(1)
+    
+def lexer_error(message, line=None):
+    if line is not None:
+        print(f"{ERROR_RED}Lexer Error [Line {line}]: {message}\033[0m")
+    else:
+        print(f"{ERROR_RED}Lexer Error: {message}\033[0m")
     sys.exit(1)
 
