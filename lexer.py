@@ -1,4 +1,6 @@
 from tokens import *
+from utils import *
+
 class Lexer:
     def __init__(self, source):
         self.source = source
@@ -46,6 +48,8 @@ class Lexer:
             elif ch == '\r': pass
             elif ch == '\t': pass
             elif ch == '-':
+                # TODO: ismail generate comment handle
+                # and multi-line comment handle /* ... */
                 if self.match('-'):
                     while self.peak() != '\n' and self.current < len(self.source):
                         self.advance()
@@ -99,6 +103,8 @@ class Lexer:
                 self.handle_string(stringStarter="'")
             elif ch == "_" or ch.isalpha():
                 self.handle_identifier()
+            else:
+                lexer_error(f"Unexpected character: {ch}", self.line)
         return self.tokens
     def advance(self):
         char = self.source[self.current]
@@ -124,7 +130,7 @@ class Lexer:
         # If we reached the end of the source without
         # finding a other stringStarter, it's an unterminated string.
         if self.current >= len(self.source):
-            raise Exception(f"unterminated string line: {self.line}")
+            lexer_error(f"unterminated string", self.line)
             return
         self.advance() 
         self.add_token(TOK_STRING)
