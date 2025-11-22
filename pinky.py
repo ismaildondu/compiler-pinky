@@ -2,6 +2,7 @@ import sys
 from lexer import Lexer
 from tokens import Token
 from parser import Parser
+from interpreter import Interpreter
 from model import *
 from utils import *
 
@@ -20,4 +21,10 @@ if __name__ == '__main__':
     print("PARSED AST: ")
     ast = Parser(tokens).parse()
     pretty_ast(ast)
+
+    print("INTERPRETER: ")
+    interpreter = Interpreter()
+    value = interpreter.interpret(ast)
+    print(f"Result: {value}")
+    
     
