@@ -17,6 +17,8 @@ class Interpreter:
             return (TYPE_NUMBER, float(astNode.value))
         if isinstance(astNode, StringModel):
             return (TYPE_STRING, str(astNode.value))
+        if isinstance(astNode, BooleanModel):
+            return (TYPE_BOOLEAN, bool(astNode.value))
         if isinstance(astNode, GroupingModel):
             return self.interpret(astNode.expression)
         if isinstance(astNode, BinaryOperationModel):
@@ -47,11 +49,12 @@ class Interpreter:
                 else:
                     runtime_error(f"Unsupported operand types for /: '{leftType}' and '{rightType}'", astNode.line)
         if isinstance(astNode, UnaryOperationModel):
-            operand = self.interpret(astNode.operand)
-            if astNode.operator.token_type == TOK_MINUS:
-                return -operand
+            operandType, operandVal = self.interpret(astNode.operand)
+            if astNode.operator.token_type == TOK_MINUS and operandType == TYPE_NUMBER:
+                return (TYPE_NUMBER, float(-operandVal))
             elif astNode.operator.token_type == TOK_PLUS:
-                return +operand
-            #elif astNode.operator.token_type == TOK_NOT:
-            #    TODO: implement not operation
+                return (TYPE_NUMBER, float(+operandVal))
+            elif astNode.operator.token_type == TOK_NOT and operandType == TYPE_BOOLEAN:
+                return (TYPE_BOOLEAN, bool(not operandVal))
+            
                 
