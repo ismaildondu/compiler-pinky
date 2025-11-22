@@ -43,6 +43,12 @@ class Parser:
             return IntegerModel(int(self.previous().lexeme), self.previous().line)
         if self.match(TOK_FLOAT):
             return FloatModel(float(self.previous().lexeme), self.previous().line)
+        if self.match(TOK_TRUE):
+            return BooleanModel(True, self.previous().line)
+        if self.match(TOK_FALSE):
+            return BooleanModel(False, self.previous().line)
+        if self.match(TOK_STRING):
+            return StringModel(str(self.previous().lexeme[1:-1]), self.previous().line)
         if self.match(TOK_LPAREN):
             expr = self.expression()
             self.expect(TOK_RPAREN)

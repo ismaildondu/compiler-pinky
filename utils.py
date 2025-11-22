@@ -35,3 +35,10 @@ def lexer_error(message, line=None):
         print(f"{ERROR_RED}Lexer Error: {message}\033[0m")
     sys.exit(1)
 
+def runtime_error(message, line=None):
+    if line is not None:
+        print(f"{ERROR_RED}Runtime Error [Line {line}]: {message}\033[0m")
+    else:
+        print(f"{ERROR_RED}Runtime Error: {message}\033[0m")
+    sys.exit(1)
+
