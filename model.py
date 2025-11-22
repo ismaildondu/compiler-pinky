@@ -61,4 +61,18 @@ class WhileStatementModel(Statement):
 
 class IfStatementModel(Statement):
     pass
-       
+
+class BooleanModel(Expression):
+    def __init__(self, value, line):
+        assert isinstance(value, bool), value
+        self.value = value
+        self.line = line
+    def __repr__(self):
+        return f"BooleanModel({self.value}, line={self.line})"
+class StringModel(Expression):
+    def __init__(self, value, line):
+        assert isinstance(value, str), value
+        self.value = value
+        self.line = line
+    def __repr__(self):
+        return f"StringModel({self.value!r}, line={self.line})"
