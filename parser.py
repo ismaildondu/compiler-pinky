@@ -64,7 +64,7 @@ class Parser:
     
     def multiplication(self):
         expr = self.unary()
-        while self.match(TOK_STAR) or self.match(TOK_SLASH):
+        while self.match(TOK_STAR) or self.match(TOK_SLASH) or self.match(TOK_MOD) or self.match(TOK_CARET):
             operator = self.previous()
             right = self.unary()
             expr = BinaryOperationModel(operator, expr, right, operator.line)
