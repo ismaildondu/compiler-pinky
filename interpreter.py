@@ -60,6 +60,30 @@ class Interpreter:
                     return (TYPE_NUMBER, leftVal / rightVal)
                 else:
                     runtime_error(f"Unsupported operand types for /: '{leftType}' and '{rightType}'", astNode.line)
+            elif astNode.operator.token_type == TOK_GT:
+                if rightType == TYPE_NUMBER and leftType == TYPE_NUMBER:
+                    return (TYPE_BOOLEAN, leftVal > rightVal)
+                else:
+                    runtime_error(f"Unsupported operand types for >: '{leftType}' and '{rightType}'", astNode.line)
+            elif astNode.operator.token_type == TOK_LT:
+                if rightType == TYPE_NUMBER and leftType == TYPE_NUMBER:
+                    return (TYPE_BOOLEAN, leftVal < rightVal)
+                else:
+                    runtime_error(f"Unsupported operand types for <: '{leftType}' and '{rightType}'", astNode.line)
+            elif astNode.operator.token_type == TOK_GE:
+                if rightType == TYPE_NUMBER and leftType == TYPE_NUMBER:
+                    return (TYPE_BOOLEAN, leftVal >= rightVal)
+                else:
+                    runtime_error(f"Unsupported operand types for >=: '{leftType}' and '{rightType}'", astNode.line)
+            elif astNode.operator.token_type == TOK_LE:
+                if rightType == TYPE_NUMBER and leftType == TYPE_NUMBER:
+                    return (TYPE_BOOLEAN, leftVal <= rightVal)
+                else:
+                    runtime_error(f"Unsupported operand types for <=: '{leftType}' and '{rightType}'", astNode.line)
+            elif astNode.operator.token_type == TOK_EQ:
+                return (TYPE_BOOLEAN, leftVal == rightVal)
+            elif astNode.operator.token_type == TOK_NE:
+                return (TYPE_BOOLEAN, leftVal != rightVal)
             else:
                 runtime_error(f"Unsupported binary operator: {astNode.operator.lexeme!r}", astNode.line)
         if isinstance(astNode, UnaryOperationModel):

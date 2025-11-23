@@ -54,19 +54,35 @@ class Parser:
             self.expect(TOK_RPAREN)
             return GroupingModel(expr, self.previous().line)
         parser_error(f"Unexpected token: {self.peek().lexeme}", self.peek().line)
+    
+    def exponentiation(self):
+        expr = self.primary()
+        while self.match(TOK_CARET):
+            operator = self.previous()
+            right = self.primary()
+            expr = BinaryOperationModel(operator, expr, right, operator.line)
+        return expr
 
     def unary(self):
         if self.match(TOK_MINUS) or self.match(TOK_PLUS) or self.match(TOK_NOT):
             operator = self.previous()
             operand = self.unary()
             return UnaryOperationModel(operator, operand, operator.line)
-        return self.primary()
+        return self.exponentiation()
     
-    def multiplication(self):
+    def modulo(self):
         expr = self.unary()
-        while self.match(TOK_STAR) or self.match(TOK_SLASH) or self.match(TOK_MOD) or self.match(TOK_CARET):
+        while self.match(TOK_MOD):
             operator = self.previous()
             right = self.unary()
+            expr = BinaryOperationModel(operator, expr, right, operator.line)
+        return expr
+
+    def multiplication(self):
+        expr = self.modulo()
+        while self.match(TOK_STAR) or self.match(TOK_SLASH):
+            operator = self.previous()
+            right = self.modulo()
             expr = BinaryOperationModel(operator, expr, right, operator.line)
         return expr
 
@@ -78,8 +94,24 @@ class Parser:
             expr = BinaryOperationModel(operator, expr, right, operator.line)
         return expr
 
+    def comparison(self):
+        expr = self.addition()
+        while self.match(TOK_GT) or self.match(TOK_GE) or self.match(TOK_LT) or self.match(TOK_LE):
+            operator = self.previous()
+            right = self.addition()
+            expr = BinaryOperationModel(operator, expr, right, operator.line)
+        return expr
+
+    def equality(self):
+        expr = self.comparison()
+        while self.match(TOK_EQ) or self.match(TOK_NE):
+            operator = self.previous()
+            right = self.comparison()
+            expr = BinaryOperationModel(operator, expr, right, operator.line)
+        return expr
+
     def expression(self):
-        return self.addition()
+        return self.equality()
 
     def parse(self):
         ast = self.expression()
