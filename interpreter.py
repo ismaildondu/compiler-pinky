@@ -84,6 +84,16 @@ class Interpreter:
                 return (TYPE_BOOLEAN, leftVal == rightVal)
             elif astNode.operator.token_type == TOK_NE:
                 return (TYPE_BOOLEAN, leftVal != rightVal)
+            elif astNode.operator.token_type == TOK_OR:
+                if rightType == TYPE_BOOLEAN and leftType == TYPE_BOOLEAN:
+                    return (TYPE_BOOLEAN, leftVal or rightVal)
+                else:
+                    runtime_error(f"Unsupported operand types for or: '{leftType}' and '{rightType}'", astNode.line)
+            elif astNode.operator.token_type == TOK_AND:
+                if rightType == TYPE_BOOLEAN and leftType == TYPE_BOOLEAN:
+                    return (TYPE_BOOLEAN, leftVal and rightVal)
+                else:
+                    runtime_error(f"Unsupported operand types for and: '{leftType}' and '{rightType}'", astNode.line)
             else:
                 runtime_error(f"Unsupported binary operator: {astNode.operator.lexeme!r}", astNode.line)
         if isinstance(astNode, UnaryOperationModel):

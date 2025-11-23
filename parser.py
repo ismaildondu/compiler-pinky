@@ -110,8 +110,24 @@ class Parser:
             expr = BinaryOperationModel(operator, expr, right, operator.line)
         return expr
 
+    def and_expression(self):
+        expr = self.equality()
+        while self.match(TOK_AND):
+            operator = self.previous()
+            right = self.equality()
+            expr = BinaryOperationModel(operator, expr, right, operator.line)
+        return expr
+
+    def or_expression(self):
+        expr = self.and_expression()
+        while self.match(TOK_OR):
+            operator = self.previous()
+            right = self.and_expression()
+            expr = BinaryOperationModel(operator, expr, right, operator.line)
+        return expr
+
     def expression(self):
-        return self.equality()
+        return self.or_expression()
 
     def parse(self):
         ast = self.expression()
