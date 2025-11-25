@@ -111,6 +111,8 @@ class Interpreter:
                 else:
                     runtime_error(f"Unsupported operand types for and: '{leftType}' and '{rightType}'", astNode.line)
             elif astNode.operator.token_type == TOK_OR:
+                if leftType == TYPE_BOOLEAN and leftVal == True:
+                    return (TYPE_BOOLEAN, True)
                 if leftType == TYPE_BOOLEAN and rightType == TYPE_BOOLEAN:
                     return (TYPE_BOOLEAN, leftVal or rightVal)
                 else:
