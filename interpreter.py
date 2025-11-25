@@ -104,6 +104,8 @@ class Interpreter:
             leftType, leftVal = self.interpret(astNode.left)
             rightType, rightVal = self.interpret(astNode.right)
             if astNode.operator.token_type == TOK_AND:
+                if leftType == TYPE_BOOLEAN and leftVal == False:
+                    return (TYPE_BOOLEAN, False)
                 if leftType == TYPE_BOOLEAN and rightType == TYPE_BOOLEAN:
                     return (TYPE_BOOLEAN, leftVal and rightVal)
                 else:
