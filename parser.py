@@ -1,6 +1,7 @@
 from model import *
 from tokens import *
 from utils import *
+
 class Parser:
     def __init__(self, tokens):
         self.tokens = tokens
@@ -57,9 +58,9 @@ class Parser:
     
     def exponentiation(self):
         expr = self.primary()
-        while self.match(TOK_CARET):
+        if self.match(TOK_CARET):
             operator = self.previous()
-            right = self.primary()
+            right = self.exponentiation()
             expr = BinaryOperationModel(operator, expr, right, operator.line)
         return expr
 
@@ -115,7 +116,7 @@ class Parser:
         while self.match(TOK_AND):
             operator = self.previous()
             right = self.equality()
-            expr = BinaryOperationModel(operator, expr, right, operator.line)
+            expr = LogicalOperationModel(operator, expr, right, operator.line)
         return expr
 
     def or_expression(self):
@@ -123,7 +124,7 @@ class Parser:
         while self.match(TOK_OR):
             operator = self.previous()
             right = self.and_expression()
-            expr = BinaryOperationModel(operator, expr, right, operator.line)
+            expr = LogicalOperationModel(operator, expr, right, operator.line)
         return expr
 
     def expression(self):

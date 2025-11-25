@@ -35,6 +35,18 @@ class UnaryOperationModel(Expression):
     def __repr__(self):
         return f"UnaryOperationModel(operator='{self.operator.lexeme!r}', operand={self.operand}, line={self.line})"
 
+class LogicalOperationModel(Expression):
+    def __init__(self, operator: Token, left: Expression, right: Expression, line):
+        assert isinstance(operator, Token), operator
+        assert isinstance(left, Expression), left
+        assert isinstance(right, Expression), right
+        self.operator = operator
+        self.left = left
+        self.right = right
+        self.line = line
+    def __repr__(self):
+        return f"LogicalOperationModel(operator='{self.operator.lexeme!r}', left={self.left}, right={self.right}, line={self.line})"
+
 class GroupingModel(Expression):
     # In Grammar: "(" expression ")"
     def __init__(self, expression: Expression, line):
