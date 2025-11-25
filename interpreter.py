@@ -61,28 +61,32 @@ class Interpreter:
                 else:
                     runtime_error(f"Unsupported operand types for /: '{leftType}' and '{rightType}'", astNode.line)
             elif astNode.operator.token_type == TOK_GT:
-                if rightType == TYPE_NUMBER and leftType == TYPE_NUMBER:
+                if (rightType == TYPE_NUMBER and leftType == TYPE_NUMBER) or (rightType == TYPE_STRING and leftType == TYPE_STRING):
                     return (TYPE_BOOLEAN, leftVal > rightVal)
                 else:
                     runtime_error(f"Unsupported operand types for >: '{leftType}' and '{rightType}'", astNode.line)
             elif astNode.operator.token_type == TOK_LT:
-                if rightType == TYPE_NUMBER and leftType == TYPE_NUMBER:
+                if (rightType == TYPE_NUMBER and leftType == TYPE_NUMBER) or (rightType == TYPE_STRING and leftType == TYPE_STRING):
                     return (TYPE_BOOLEAN, leftVal < rightVal)
                 else:
                     runtime_error(f"Unsupported operand types for <: '{leftType}' and '{rightType}'", astNode.line)
             elif astNode.operator.token_type == TOK_GE:
-                if rightType == TYPE_NUMBER and leftType == TYPE_NUMBER:
+                if (rightType == TYPE_NUMBER and leftType == TYPE_NUMBER) or (rightType == TYPE_STRING and leftType == TYPE_STRING):
                     return (TYPE_BOOLEAN, leftVal >= rightVal)
                 else:
                     runtime_error(f"Unsupported operand types for >=: '{leftType}' and '{rightType}'", astNode.line)
             elif astNode.operator.token_type == TOK_LE:
-                if rightType == TYPE_NUMBER and leftType == TYPE_NUMBER:
+                if (rightType == TYPE_NUMBER and leftType == TYPE_NUMBER) or (rightType == TYPE_STRING and leftType == TYPE_STRING):
                     return (TYPE_BOOLEAN, leftVal <= rightVal)
                 else:
                     runtime_error(f"Unsupported operand types for <=: '{leftType}' and '{rightType}'", astNode.line)
             elif astNode.operator.token_type == TOK_EQ:
+                if rightType != leftType:
+                    return (TYPE_BOOLEAN, False)
                 return (TYPE_BOOLEAN, leftVal == rightVal)
             elif astNode.operator.token_type == TOK_NE:
+                if rightType != leftType:
+                    return (TYPE_BOOLEAN, True)
                 return (TYPE_BOOLEAN, leftVal != rightVal)
             elif astNode.operator.token_type == TOK_OR:
                 if rightType == TYPE_BOOLEAN and leftType == TYPE_BOOLEAN:
