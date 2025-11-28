@@ -55,6 +55,7 @@ class Interpreter:
                     runtime_error(f"Unsupported operand types for ^: '{leftType}' and '{rightType}'", astNode.line)
             elif astNode.operator.token_type == TOK_SLASH:
                 if rightType == TYPE_NUMBER and leftType == TYPE_NUMBER:
+                    # TODO: consider IEEE 754 behavior
                     if rightVal == 0:
                         runtime_error("Division by zero", astNode.line)
                     return (TYPE_NUMBER, leftVal / rightVal)
