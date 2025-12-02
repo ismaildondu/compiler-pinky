@@ -90,6 +90,15 @@ class PrintStatementModel(Statement):
         self.line = line
     def __repr__(self):
         return f"PrintStatementModel({self.value}, line={self.line})"
+        
+class PrintlnStatementModel(Statement):
+    def __init__(self, value, line):
+        assert isinstance(value, Expression), value
+        self.value = value
+        self.line = line
+    def __repr__(self):
+        return f"PrintlnStatementModel({self.value}, line={self.line})"
+
 
 class BooleanModel(Expression):
     def __init__(self, value, line):

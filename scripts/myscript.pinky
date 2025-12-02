@@ -1,4 +1,4 @@
 
-print 1 + 1 + 1 + 1
-print 3*5/3
+print 1 + 1 + 1 + 1 
+println 3*5/3
 print("1 KM: "+1000+" meters")

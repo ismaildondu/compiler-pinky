@@ -125,7 +125,12 @@ class Interpreter:
                 self.interpret(stmt)
         if isinstance(astNode, PrintStatementModel):
             _Type, _Val = self.interpret(astNode.value)
-            print(_Val)
+            print(_Val,end="")
+        if isinstance(astNode, PrintlnStatementModel):
+            _Type, _Val = self.interpret(astNode.value)
+            print(_Val) 
+                
+
                 
             
             
