@@ -120,5 +120,13 @@ class Interpreter:
                     runtime_error(f"Unsupported operand types for or: '{leftType}' and '{rightType}'", astNode.line)
             else:
                 runtime_error(f"Unsupported logical operator: {astNode.operator.lexeme!r}", astNode.line)
+        if isinstance(astNode, Statements):
+            for stmt in astNode.stmts:
+                self.interpret(stmt)
+        if isinstance(astNode, PrintStatementModel):
+            _Type, _Val = self.interpret(astNode.value)
+            print(_Val)
+                
+            
             
                 
