@@ -130,8 +130,22 @@ class Parser:
     def expression(self):
         return self.or_expression()
 
+    def stmt(self):
+        pass
+
+    def stmts(self):
+        stmts = []
+        while(self.curr < len(self.tokens)):
+            stmt = self.stmt()
+            stmts.append(stmt)
+        return Statements(stmts, self.previous().line)
+
+    def program(self):
+        stmts = self.stmts()
+        return stmts
+
     def parse(self):
-        ast = self.expression()
+        ast = self.program()
         if self.curr < len(self.tokens):
             parser_error(f"Unexpected token at end: {self.peek().lexeme}", self.peek().line)
         return ast

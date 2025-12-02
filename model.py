@@ -9,6 +9,15 @@ class Expression(AST_NODE):
 class Statement(AST_NODE):
     pass
 
+class Statements(AST_NODE):
+    def __init__(self,stmts,line):
+        assert all( isinstance(stmt,Statement) for stmt in stmts), stmts
+        self.stmts = stmts
+        self.line = line
+    def __repr__(self):
+        return f"Statements({self.stmts}, line={self.line})"
+
+
 class IntegerModel(Expression):
     def __init__(self, value, line):
         assert isinstance(value, int), value
