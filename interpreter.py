@@ -124,10 +124,13 @@ class Interpreter:
             for stmt in astNode.stmts:
                 self.interpret(stmt)
         if isinstance(astNode, PrintStatementModel):
+            # TODO: Merge PrintlnStatementModel and PrintStatementModel in a single class add just type I did not know why I have created this kind of function :D I was slepy I guess
             _Type, _Val = self.interpret(astNode.value)
+            _Val = str(_Val).encode("utf-8").decode("unicode_escape")
             print(_Val,end="")
         if isinstance(astNode, PrintlnStatementModel):
             _Type, _Val = self.interpret(astNode.value)
+            _Val = str(_Val).encode("utf-8").decode("unicode_escape")
             print(_Val) 
                 
 
