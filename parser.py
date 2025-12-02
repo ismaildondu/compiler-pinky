@@ -130,9 +130,14 @@ class Parser:
     def expression(self):
         return self.or_expression()
 
-    def stmt(self):
-        pass
+    def print_stmt(self):
+        if self.match(TOK_PRINT):
+            val = self.expression()
+            return PrintStatementModel(val, self.previous().line)
 
+    def stmt(self):
+        if self.peek().token_type == TOK_PRINT:
+            return self.print_stmt()
     def stmts(self):
         stmts = []
         while(self.curr < len(self.tokens)):
