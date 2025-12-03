@@ -140,15 +140,29 @@ class Parser:
             val = self.expression()
             return PrintlnStatementModel(val, self.previous().line)
 
+    def if_stmt(self):
+        self.expect(TOK_IF)
+        condition = self.expression()
+        self.expect(TOK_THEN)
+        then_stmts = self.stmts()
+        if self.match(TOK_ELSE):
+            else_stmts = self.stmts()
+        else:
+            else_stmts = None
+        self.expect(TOK_END)
+        return IfStatementModel(condition, then_stmts, else_stmts, self.previous().line)
+
     def stmt(self):
         if self.peek().token_type == TOK_PRINT:
             return self.print_stmt()
         elif self.peek().token_type == TOK_PRINTLN:
             return self.println_stmt()
+        elif self.peek().token_type == TOK_IF:
+            return self.if_stmt()
 
     def stmts(self):
         stmts = []
-        while(self.curr < len(self.tokens)):
+        while(self.curr < len(self.tokens) and not self.is_next(TOK_END) and not self.is_next(TOK_ELSE)):
             stmt = self.stmt()
             stmts.append(stmt)
         return Statements(stmts, self.previous().line)

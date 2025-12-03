@@ -17,7 +17,6 @@ class Statements(AST_NODE):
     def __repr__(self):
         return f"Statements({self.stmts}, line={self.line})"
 
-
 class IntegerModel(Expression):
     def __init__(self, value, line):
         assert isinstance(value, int), value
@@ -81,7 +80,16 @@ class WhileStatementModel(Statement):
     pass
 
 class IfStatementModel(Statement):
-    pass
+    def __init__(self, condition, then_stmts, else_stmts, line):
+        assert isinstance(condition, Expression), condition
+        assert isinstance(then_stmts, Statements), then_stmts
+        assert (else_stmts is None) or isinstance(else_stmts, Statements), else_stmts
+        self.condition = condition
+        self.then_stmts = then_stmts
+        self.else_stmts = else_stmts
+        self.line = line
+    def __repr__(self):
+        return f"IfStatementModel(condition={self.condition}, then_stmts={self.then_stmts}, else_stmts={self.else_stmts}, line={self.line})"
 
 class PrintStatementModel(Statement):
     def __init__(self, value, line):
@@ -99,7 +107,6 @@ class PrintlnStatementModel(Statement):
     def __repr__(self):
         return f"PrintlnStatementModel({self.value}, line={self.line})"
 
-
 class BooleanModel(Expression):
     def __init__(self, value, line):
         assert isinstance(value, bool), value
@@ -107,6 +114,7 @@ class BooleanModel(Expression):
         self.line = line
     def __repr__(self):
         return f"BooleanModel({self.value}, line={self.line})"
+
 class StringModel(Expression):
     def __init__(self, value, line):
         assert isinstance(value, str), value

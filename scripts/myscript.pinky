@@ -1,4 +1,5 @@
-
-print 1 + 1 + 1 + 1 + "\n \n"
-println 3*5/3
-print("1 KM: "+1000+" meters")
+if !(true) then
+    print("1 KM: "+1000+" meters \n")
+else
+    println("2 KM: "+2000+" meters")
+end

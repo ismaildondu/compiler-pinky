@@ -132,6 +132,15 @@ class Interpreter:
             _Type, _Val = self.interpret(astNode.value)
             _Val = str(_Val).encode("utf-8").decode("unicode_escape")
             print(_Val) 
+        if isinstance(astNode, IfStatementModel):
+            conditionType, conditionVal = self.interpret(astNode.condition)
+            if conditionType != TYPE_BOOLEAN:
+                runtime_error(f"If condition must be boolean, got '{conditionType}'", astNode.line)
+            if conditionVal == True:
+                self.interpret(astNode.then_stmts)
+            else:
+                if astNode.else_stmts is not None:
+                    self.interpret(astNode.else_stmts)
                 
 
                 
