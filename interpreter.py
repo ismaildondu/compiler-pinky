@@ -132,6 +132,7 @@ class Interpreter:
             _Type, _Val = self.interpret(astNode.value)
             _Val = str(_Val).encode("utf-8").decode("unicode_escape")
             print(_Val) 
+        # TODO: implement switch case with jump table O(1) 
         if isinstance(astNode, IfStatementModel):
             conditionType, conditionVal = self.interpret(astNode.condition)
             if conditionType != TYPE_BOOLEAN:

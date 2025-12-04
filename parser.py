@@ -54,7 +54,9 @@ class Parser:
             expr = self.expression()
             self.expect(TOK_RPAREN)
             return GroupingModel(expr, self.previous().line)
-        parser_error(f"Unexpected token: {self.peek().lexeme}", self.peek().line)
+        else:
+            self.expect(TOK_IDENTIFIER)
+            return IdentifierModel(self.previous().lexeme, self.previous().line)
     
     def exponentiation(self):
         expr = self.primary()
@@ -159,6 +161,15 @@ class Parser:
             return self.println_stmt()
         elif self.peek().token_type == TOK_IF:
             return self.if_stmt()
+        else:
+            left = self.expression()
+            if self.match(TOK_ASSIGN):
+                right = self.expression()
+                return AssignmentModel(left, right, self.previous().line)
+            else:
+                # TODO: handle function calls 
+                pass 
+
 
     def stmts(self):
         stmts = []

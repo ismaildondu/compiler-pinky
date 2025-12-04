@@ -3,3 +3,6 @@ if !(true) then
 else
     println("2 KM: "+2000+" meters")
 end
+
+velocity = 21
+velocity = velocity + 1

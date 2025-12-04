@@ -115,6 +115,14 @@ class BooleanModel(Expression):
     def __repr__(self):
         return f"BooleanModel({self.value}, line={self.line})"
 
+class IdentifierModel(Expression):
+    def __init__(self, name, line):
+        assert isinstance(name, str), name
+        self.name = name
+        self.line = line
+    def __repr__(self):
+        return f"IdentifierModel({self.name!r}, line={self.line})"
+
 class StringModel(Expression):
     def __init__(self, value, line):
         assert isinstance(value, str), value
@@ -122,3 +130,13 @@ class StringModel(Expression):
         self.line = line
     def __repr__(self):
         return f"StringModel({self.value!r}, line={self.line})"
+
+class AssignmentModel(Statement):
+    def __init__(self, left, right, line):
+        assert isinstance(left, Expression), left
+        assert isinstance(right, Expression), right
+        self.left = left
+        self.right = right
+        self.line = line
+    def __repr__(self):
+        return f"AssignmentModel(left={self.left}, right={self.right}, line={self.line})"
