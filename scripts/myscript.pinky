@@ -4,5 +4,14 @@ else
     println("2 KM: "+2000+" meters")
 end
 
-velocity = 21
-velocity = velocity + 1
+g=9.80
+
+if (g==9.80) then
+    print("We are in earth!:" + g + "\n")
+end
+
+g=g+1
+
+if !(g==9.80) then
+    print("We are not in earth!:" + g + "\n")
+end

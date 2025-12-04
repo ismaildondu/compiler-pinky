@@ -24,7 +24,7 @@ if __name__ == '__main__':
 
     print("INTERPRETER: ")
     interpreter = Interpreter()
-    interpreter.interpret(ast)
+    interpreter.interpret_ast(ast)
     
     
     

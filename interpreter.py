@@ -1,6 +1,7 @@
 from model import *
 from tokens import *
 from utils import *
+from state import *
 
 TYPE_NUMBER = 'TYPE_NUMBER' # 64 bit float acording to pinky design doc
 TYPE_STRING = 'TYPE_STRING' # string that is managed by python
@@ -10,7 +11,20 @@ class Interpreter:
     def __init__(self):
         pass
     
-    def interpret(self, astNode):
+    def interpret(self, astNode, env):
+        if isinstance(astNode, IdentifierModel):
+            value = env.get_variable(astNode.name)
+            if value is None:
+                runtime_error(f"Undefined variable '{astNode.name}'", astNode.line)
+            if value[0] is None:
+                runtime_error(f"Uninitialized variable '{astNode.name}'", astNode.line)
+            return value
+        if isinstance(astNode, AssignmentModel):
+            rightType, rightVal = self.interpret(astNode.right, env)
+            if not isinstance(astNode.left, IdentifierModel):
+                runtime_error("Invalid assignment target", astNode.line)
+            env.set_variable(astNode.left.name, (rightType, rightVal))
+            return (rightType, rightVal)
         if isinstance(astNode, IntegerModel):
             return (TYPE_NUMBER, float(astNode.value))
         if isinstance(astNode, FloatModel):
@@ -20,10 +34,10 @@ class Interpreter:
         if isinstance(astNode, BooleanModel):
             return (TYPE_BOOLEAN, bool(astNode.value))
         if isinstance(astNode, GroupingModel):
-            return self.interpret(astNode.expression)
+            return self.interpret(astNode.expression, env)
         if isinstance(astNode, BinaryOperationModel):
-            rightType, rightVal = self.interpret(astNode.right)
-            leftType, leftVal = self.interpret(astNode.left)
+            rightType, rightVal = self.interpret(astNode.right, env)
+            leftType, leftVal = self.interpret(astNode.left, env)
             if astNode.operator.token_type == TOK_PLUS:
                 if rightType == TYPE_NUMBER and leftType == TYPE_NUMBER:
                     return (TYPE_NUMBER, leftVal + rightVal)
@@ -92,7 +106,7 @@ class Interpreter:
             else:
                 runtime_error(f"Unsupported binary operator: {astNode.operator.lexeme!r}", astNode.line)
         if isinstance(astNode, UnaryOperationModel):
-            operandType, operandVal = self.interpret(astNode.operand)
+            operandType, operandVal = self.interpret(astNode.operand, env)
             if astNode.operator.token_type == TOK_MINUS and operandType == TYPE_NUMBER:
                 return (TYPE_NUMBER, float(-operandVal))
             elif astNode.operator.token_type == TOK_PLUS and operandType == TYPE_NUMBER:
@@ -102,8 +116,8 @@ class Interpreter:
             else:
                 runtime_error(f"Unsupported operand type for {astNode.operator.lexeme!r}: '{operandType}'", astNode.line)
         if isinstance(astNode, LogicalOperationModel):
-            leftType, leftVal = self.interpret(astNode.left)
-            rightType, rightVal = self.interpret(astNode.right)
+            leftType, leftVal = self.interpret(astNode.left, env)
+            rightType, rightVal = self.interpret(astNode.right, env)
             if astNode.operator.token_type == TOK_AND:
                 if leftType == TYPE_BOOLEAN and leftVal == False:
                     return (TYPE_BOOLEAN, False)
@@ -122,27 +136,31 @@ class Interpreter:
                 runtime_error(f"Unsupported logical operator: {astNode.operator.lexeme!r}", astNode.line)
         if isinstance(astNode, Statements):
             for stmt in astNode.stmts:
-                self.interpret(stmt)
+                self.interpret(stmt, env)
         if isinstance(astNode, PrintStatementModel):
             # TODO: Merge PrintlnStatementModel and PrintStatementModel in a single class add just type I did not know why I have created this kind of function :D I was slepy I guess
-            _Type, _Val = self.interpret(astNode.value)
+            _Type, _Val = self.interpret(astNode.value, env)
             _Val = str(_Val).encode("utf-8").decode("unicode_escape")
             print(_Val,end="")
         if isinstance(astNode, PrintlnStatementModel):
-            _Type, _Val = self.interpret(astNode.value)
+            _Type, _Val = self.interpret(astNode.value, env)
             _Val = str(_Val).encode("utf-8").decode("unicode_escape")
             print(_Val) 
         # TODO: implement switch case with jump table O(1) 
         if isinstance(astNode, IfStatementModel):
-            conditionType, conditionVal = self.interpret(astNode.condition)
+            conditionType, conditionVal = self.interpret(astNode.condition, env)
             if conditionType != TYPE_BOOLEAN:
                 runtime_error(f"If condition must be boolean, got '{conditionType}'", astNode.line)
             if conditionVal == True:
-                self.interpret(astNode.then_stmts)
+                self.interpret(astNode.then_stmts, env.new_environment())
             else:
                 if astNode.else_stmts is not None:
-                    self.interpret(astNode.else_stmts)
+                    self.interpret(astNode.else_stmts, env.new_environment())
+    def interpret_ast(self, ast):
+        environment = Environment()
+        self.interpret(ast, environment)
                 
+        
 
                 
             
