@@ -77,7 +77,14 @@ class BinaryOperationModel(Expression):
         return f"BinaryOperationModel(operator='{self.operator.lexeme!r}', left={self.left}, right={self.right}, line={self.line})"
 
 class WhileStatementModel(Statement):
-    pass
+    def __init__(self, condition, body_stmts, line):
+        assert isinstance(condition, Expression), condition
+        assert isinstance(body_stmts, Statements), body_stmts
+        self.condition = condition
+        self.body_stmts = body_stmts
+        self.line = line
+    def __repr__(self):
+        return f"WhileStatementModel(condition={self.condition}, body_stmts={self.body_stmts}, line={self.line})"
 
 class IfStatementModel(Statement):
     def __init__(self, condition, then_stmts, else_stmts, line):

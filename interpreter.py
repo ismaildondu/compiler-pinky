@@ -156,6 +156,14 @@ class Interpreter:
             else:
                 if astNode.else_stmts is not None:
                     self.interpret(astNode.else_stmts, env.new_environment())
+        if isinstance(astNode, WhileStatementModel):
+            while True:
+                conditionType, conditionVal = self.interpret(astNode.condition, env)
+                if conditionType != TYPE_BOOLEAN:
+                    runtime_error(f"While condition must be boolean, got '{conditionType}'", astNode.line)
+                if conditionVal == False:
+                    break
+                self.interpret(astNode.body_stmts, env.new_environment())
     def interpret_ast(self, ast):
         environment = Environment()
         self.interpret(ast, environment)

@@ -154,6 +154,14 @@ class Parser:
         self.expect(TOK_END)
         return IfStatementModel(condition, then_stmts, else_stmts, self.previous().line)
 
+    def while_stmt(self):
+        self.expect(TOK_WHILE)
+        condition = self.expression()
+        self.expect(TOK_DO)
+        body_stmts = self.stmts()
+        self.expect(TOK_END)
+        return WhileStatementModel(condition, body_stmts, self.previous().line)
+
     def stmt(self):
         if self.peek().token_type == TOK_PRINT:
             return self.print_stmt()
@@ -161,6 +169,8 @@ class Parser:
             return self.println_stmt()
         elif self.peek().token_type == TOK_IF:
             return self.if_stmt()
+        elif self.peek().token_type == TOK_WHILE:
+            return self.while_stmt()
         else:
             left = self.expression()
             if self.match(TOK_ASSIGN):

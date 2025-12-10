@@ -12,7 +12,12 @@ class Environment:
             return None
     
     def set_variable(self, name, value):
-        self.variables[name] = value
+        if name in self.variables:
+            self.variables[name] = value
+        elif self.parent is not None and self.parent.get_variable(name) is not None:
+            self.parent.set_variable(name, value)
+        else:
+            self.variables[name] = value
 
     def new_environment(self):
         return Environment(parent=self)
