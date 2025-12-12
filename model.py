@@ -85,7 +85,21 @@ class WhileStatementModel(Statement):
         self.line = line
     def __repr__(self):
         return f"WhileStatementModel(condition={self.condition}, body_stmts={self.body_stmts}, line={self.line})"
-
+class ForStatementModel(Statement):
+    def __init__(self, variable_token, start_expr, end_expr, increment_expr, body_stmts, line):
+        assert isinstance(variable_token, Token), variable_token
+        assert isinstance(start_expr, Expression), start_expr
+        assert isinstance(end_expr, Expression), end_expr
+        assert isinstance(increment_expr, Expression), increment_expr
+        assert isinstance(body_stmts, Statements), body_stmts
+        self.variable_token = variable_token
+        self.start_expr = start_expr
+        self.end_expr = end_expr
+        self.increment_expr = increment_expr
+        self.body_stmts = body_stmts
+        self.line = line
+    def __repr__(self):
+        return f"ForStatementModel(variable_token={self.variable_token}, start_expr={self.start_expr}, end_expr={self.end_expr}, increment_expr={self.increment_expr}, body_stmts={self.body_stmts}, line={self.line})"
 class IfStatementModel(Statement):
     def __init__(self, condition, then_stmts, else_stmts, line):
         assert isinstance(condition, Expression), condition

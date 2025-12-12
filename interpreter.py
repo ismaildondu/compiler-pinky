@@ -164,6 +164,21 @@ class Interpreter:
                 if conditionVal == False:
                     break
                 self.interpret(astNode.body_stmts, env.new_environment())
+        if isinstance(astNode, ForStatementModel):
+            startType, startVal = self.interpret(astNode.start_expr, env)
+            endType, endVal = self.interpret(astNode.end_expr, env)
+            incrementType, incrementVal = self.interpret(astNode.increment_expr, env)
+            if startType != TYPE_NUMBER or endType != TYPE_NUMBER or incrementType != TYPE_NUMBER:
+                runtime_error(f"For loop expressions must be numbers", astNode.line)
+            varName = astNode.variable_token.lexeme
+            currentVal = startVal
+            while True:
+                if (incrementVal > 0 and currentVal > endVal) or (incrementVal < 0 and currentVal < endVal):
+                    break
+                loopEnv = env.new_environment()
+                loopEnv.set_variable(varName, (TYPE_NUMBER, currentVal))
+                self.interpret(astNode.body_stmts, loopEnv)
+                currentVal += incrementVal
     def interpret_ast(self, ast):
         environment = Environment()
         self.interpret(ast, environment)

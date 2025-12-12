@@ -21,3 +21,7 @@ while i >= 1 do
     print (i+"\n")
     i = i-1
 end 
+println ("============ ")
+for j = 20, 30, 2 do
+    println (j)
+end

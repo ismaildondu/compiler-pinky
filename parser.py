@@ -161,6 +161,23 @@ class Parser:
         body_stmts = self.stmts()
         self.expect(TOK_END)
         return WhileStatementModel(condition, body_stmts, self.previous().line)
+    
+    def for_stmt(self):
+        self.expect(TOK_FOR)
+        self.expect(TOK_IDENTIFIER)
+        variable_token = self.previous()
+        self.expect(TOK_ASSIGN)
+        start_expr = self.expression()
+        self.expect(TOK_COMMA)
+        end_expr = self.expression()
+        if self.match(TOK_COMMA):
+            increment_expr = self.expression()
+        else:
+            increment_expr = IntegerModel(1, self.previous().line)
+        self.expect(TOK_DO)
+        body_stmts = self.stmts()
+        self.expect(TOK_END)
+        return ForStatementModel(variable_token, start_expr, end_expr, increment_expr, body_stmts, self.previous().line)
 
     def stmt(self):
         if self.peek().token_type == TOK_PRINT:
@@ -171,13 +188,14 @@ class Parser:
             return self.if_stmt()
         elif self.peek().token_type == TOK_WHILE:
             return self.while_stmt()
+        elif self.peek().token_type == TOK_FOR:
+            return self.for_stmt()
         else:
             left = self.expression()
             if self.match(TOK_ASSIGN):
                 right = self.expression()
                 return AssignmentModel(left, right, self.previous().line)
             else:
-                # TODO: handle function calls 
                 pass 
 
 
