@@ -42,3 +42,16 @@ def runtime_error(message, line=None):
         print(f"{ERROR_RED}Runtime Error: {message}\033[0m")
     sys.exit(1)
 
+def stringify(value):
+    if value is None:
+        return "nil"
+    elif isinstance(value, bool):
+        return "true" if value else "false"
+    elif isinstance(value, float):
+        text = str(value)
+        if text.endswith(".0"):
+            text = text[:-2]
+        return text
+    else:
+        return str(value)
+

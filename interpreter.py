@@ -30,7 +30,7 @@ class Interpreter:
         if isinstance(astNode, FloatModel):
             return (TYPE_NUMBER, float(astNode.value))
         if isinstance(astNode, StringModel):
-            return (TYPE_STRING, str(astNode.value))
+            return (TYPE_STRING, stringify(astNode.value))
         if isinstance(astNode, BooleanModel):
             return (TYPE_BOOLEAN, bool(astNode.value))
         if isinstance(astNode, GroupingModel):
@@ -42,7 +42,7 @@ class Interpreter:
                 if rightType == TYPE_NUMBER and leftType == TYPE_NUMBER:
                     return (TYPE_NUMBER, leftVal + rightVal)
                 elif rightType == TYPE_STRING or leftType == TYPE_STRING:
-                    return (TYPE_STRING, (str(leftVal) + str(rightVal)))
+                    return (TYPE_STRING, (stringify((leftVal)) + stringify((rightVal))))
                 else:
                     runtime_error(f"Unsupported operand types for +: '{leftType}' and '{rightType}'", astNode.line)
             elif astNode.operator.token_type == TOK_MINUS:
@@ -140,11 +140,15 @@ class Interpreter:
         if isinstance(astNode, PrintStatementModel):
             # TODO: Merge PrintlnStatementModel and PrintStatementModel in a single class add just type I did not know why I have created this kind of function :D I was slepy I guess
             _Type, _Val = self.interpret(astNode.value, env)
+            _Val = stringify(_Val)
             _Val = str(_Val).encode("utf-8").decode("unicode_escape")
+ 
             print(_Val,end="")
         if isinstance(astNode, PrintlnStatementModel):
             _Type, _Val = self.interpret(astNode.value, env)
+            _Val = stringify(_Val)
             _Val = str(_Val).encode("utf-8").decode("unicode_escape")
+
             print(_Val) 
         # TODO: implement switch case with jump table O(1) 
         if isinstance(astNode, IfStatementModel):
