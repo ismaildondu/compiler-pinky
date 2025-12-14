@@ -170,6 +170,8 @@ class Interpreter:
             incrementType, incrementVal = self.interpret(astNode.increment_expr, env)
             if startType != TYPE_NUMBER or endType != TYPE_NUMBER or incrementType != TYPE_NUMBER:
                 runtime_error(f"For loop expressions must be numbers", astNode.line)
+            if incrementVal == 0:
+                runtime_error(f"For loop increment value cannot be zero", astNode.line)
             varName = astNode.variable_token.lexeme
             currentVal = startVal
             while True:
